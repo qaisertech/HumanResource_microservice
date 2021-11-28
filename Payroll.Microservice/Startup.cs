@@ -1,3 +1,5 @@
+using GreenPipes;
+using MassTransit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -6,6 +8,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Payroll.Microservice.Consumer;
+using Payroll.Microservice.Model;
+using RabbitMQ;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,8 +30,40 @@ namespace Payroll.Microservice
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<PayrollConfiguration>(Configuration.GetSection("PayrollConfiguration"));
 
+            services.AddMassTransit(x =>
+            {
+                x.AddConsumer<LeaveConsumer>();
+                x.SetKebabCaseEndpointNameFormatter();
+                x.UsingRabbitMq((context, cfg) =>
+                {
+                    cfg.Host(RabbitMqConsts.Host);
+                    cfg.ReceiveEndpoint(RabbitMqConsts.LeaveQueue, c =>
+                    {
+                        c.ConfigureConsumer<LeaveConsumer>(context);
+                    });
+                });
+                //x.AddBus(provider => Bus.Factory.CreateUsingRabbitMq(config =>
+                //{
+                //    config.Host(new Uri(RabbitMqConsts.RabbitMqRootUri), h =>
+                //    {
+                //        h.Username(RabbitMqConsts.UserName);
+                //        h.Password(RabbitMqConsts.Password);
+
+                //    });
+                //    config.AutoDelete = false;
+                //    //config.ReceiveEndpoint("Leave_Queue", e =>
+                //    //{
+                //    //    e.PrefetchCount = 16;
+                //    //    e.UseMessageRetry(r => r.Interval(2, 100));
+                //    //    e.Consumer<LeaveConsumer>();
+                //    //});
+                //}));
+            });
+            services.AddMassTransitHostedService();
             services.AddControllers();
+            //services.AddHostedService<LeaveConsumerHostedService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

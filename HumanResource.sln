@@ -3,15 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityServer", "IdentityServer\IdentityServer.csproj", "{85E7551A-63DC-4D14-BC20-06306AF2F172}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer", "IdentityServer\IdentityServer.csproj", "{85E7551A-63DC-4D14-BC20-06306AF2F172}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Employee.Microservice", "Employee.Microservice\Employee.Microservice.csproj", "{552318C1-74CF-41D7-8C9E-EAA4F793FCFA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Employee.Microservice", "Employee.Microservice\Employee.Microservice.csproj", "{552318C1-74CF-41D7-8C9E-EAA4F793FCFA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Leave.Microservice", "Leave.Microservice\Leave.Microservice.csproj", "{6E0A3954-C2F7-4AD9-AD13-E0CDA48C26CF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Leave.Microservice", "Leave.Microservice\Leave.Microservice.csproj", "{6E0A3954-C2F7-4AD9-AD13-E0CDA48C26CF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Payroll.Microservice", "Payroll.Microservice\Payroll.Microservice.csproj", "{A65FB408-46AD-4A79-8BF1-3C4BFBA212D3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Payroll.Microservice", "Payroll.Microservice\Payroll.Microservice.csproj", "{A65FB408-46AD-4A79-8BF1-3C4BFBA212D3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ocelot.Gateway", "Ocelot.Gateway\Ocelot.Gateway.csproj", "{0119FC7B-CF9B-41E8-AADD-6892F0566B26}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ocelot.Gateway", "Ocelot.Gateway\Ocelot.Gateway.csproj", "{0119FC7B-CF9B-41E8-AADD-6892F0566B26}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RabbitMQ", "RabbitMQ\RabbitMQ.csproj", "{D6CA2021-7DFD-4EC9-86F7-E6B472A4C8F7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{0119FC7B-CF9B-41E8-AADD-6892F0566B26}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0119FC7B-CF9B-41E8-AADD-6892F0566B26}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0119FC7B-CF9B-41E8-AADD-6892F0566B26}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6CA2021-7DFD-4EC9-86F7-E6B472A4C8F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6CA2021-7DFD-4EC9-86F7-E6B472A4C8F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6CA2021-7DFD-4EC9-86F7-E6B472A4C8F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6CA2021-7DFD-4EC9-86F7-E6B472A4C8F7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
