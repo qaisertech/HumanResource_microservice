@@ -4,16 +4,22 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Payroll.Microservice.Consumer;
+using Payroll.Microservice.Data;
+using Payroll.Microservice.IRepository;
 using Payroll.Microservice.Model;
+using Payroll.Microservice.Repository;
 using RabbitMQ;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Payroll.Microservice
@@ -32,8 +38,10 @@ namespace Payroll.Microservice
         {
             services.Configure<PayrollConfiguration>(Configuration.GetSection("PayrollConfiguration"));
 
+            services.AddDbContext<PayrollContext>(options => options.UseSqlServer(Configuration.GetConnectionString("PayrollConnectionString")));
             services.AddMassTransit(x =>
             {
+               
                 x.AddConsumer<LeaveConsumer>();
                 x.SetKebabCaseEndpointNameFormatter();
                 x.UsingRabbitMq((context, cfg) =>
@@ -41,6 +49,11 @@ namespace Payroll.Microservice
                     cfg.Host(RabbitMqConsts.Host);
                     cfg.ReceiveEndpoint(RabbitMqConsts.LeaveQueue, c =>
                     {
+                        c.UseTransaction(y =>
+                        {
+                            y.Timeout = TimeSpan.FromSeconds(90);
+                            y.IsolationLevel = System.Transactions.IsolationLevel.ReadCommitted;
+                        });
                         c.ConfigureConsumer<LeaveConsumer>(context);
                     });
                 });
@@ -63,6 +76,7 @@ namespace Payroll.Microservice
             });
             services.AddMassTransitHostedService();
             services.AddControllers();
+            services.AddScoped<IPayrollRepository, PayrollRepository>();
             //services.AddHostedService<LeaveConsumerHostedService>();
         }
 

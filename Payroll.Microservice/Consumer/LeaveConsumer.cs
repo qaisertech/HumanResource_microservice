@@ -1,7 +1,10 @@
-﻿using MassTransit;
+﻿using GreenPipes;
+using MassTransit;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using Payroll.Microservice.IRepository;
 using Payroll.Microservice.Model;
 using RabbitMQ;
 using RabbitMQ.Client.Events;
@@ -37,7 +40,7 @@ namespace Payroll.Microservice.Consumer
 
         protected void Consume(Object state)
         {
-            LeaveConsumer leaveConsumer = new LeaveConsumer();
+            //LeaveConsumer leaveConsumer = new LeaveConsumer();
             //var channel = RabbitMQConnection.ConnectToRabbitMQ(_configuration.LeaveQueue, "leave.init");
 
             //var consumer = new EventingBasicConsumer(channel);
@@ -67,9 +70,31 @@ namespace Payroll.Microservice.Consumer
     }
     public class LeaveConsumer : IConsumer<LeaveConsumerModel>
     {
+        private readonly IPayrollRepository _payrollRepository;
+
+        public LeaveConsumer(IPayrollRepository payrollRepository)
+        {
+            _payrollRepository = payrollRepository;
+        }
         public Task Consume(ConsumeContext<LeaveConsumerModel> context)
         {
-            var t = context.Message;
+            var transactionContext = context.GetPayload<TransactionContext>();
+            var model = new PayrollModel()
+            {
+                Deductions = context.Message.NumberOfDays,
+                EmployeeID = context.Message.EmployeeID,
+                NoOfLeaves = context.Message.NumberOfDays
+
+            };
+            _payrollRepository.AddPayroll(model);
+            var ledgerModel = new PayrollLedgerModel()
+            {
+                LeaveID = context.Message.LeaveID,
+                EmployeeID = model.EmployeeID,
+                Status = "Payroll Updated"
+            };
+            _payrollRepository.PublishAfterLedger(ledgerModel);
+            transactionContext.Commit();
             return Task.CompletedTask;
         }
     }

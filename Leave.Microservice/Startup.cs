@@ -17,6 +17,7 @@ using Leave.Microservice.Repository;
 using Leave.Microservice.IRepository;
 using Microsoft.EntityFrameworkCore;
 using Leave.Microservice.Data;
+using Leave.Microservice.Consumer;
 
 namespace Leave.Microservice
 {
@@ -34,11 +35,18 @@ namespace Leave.Microservice
         {
             services.Configure<LeaveConfiguration>(Configuration.GetSection("LeaveConfiguration"));
             services.AddDbContext<LeaveContext>(options => options.UseSqlServer(Configuration.GetConnectionString("LeaveConnectionString")));
+
             services.AddMassTransit(x =>
             {
+                x.AddConsumer<PayrollConsumer>();
+                x.SetKebabCaseEndpointNameFormatter();
                 x.UsingRabbitMq((ctx, cfg) =>
                 {
                     cfg.Host(RabbitMqConsts.Host);
+                    cfg.ReceiveEndpoint(RabbitMqConsts.PayrollQueue, c =>
+                    {
+                        c.ConfigureConsumer<PayrollConsumer>(ctx);
+                    });
                 });
                 //x.AddBus(provider => Bus.Factory.CreateUsingRabbitMq(config =>
                 // {

@@ -1,15 +1,19 @@
 using IdentityServer;
 
-var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddIdentityServer()
-   .AddInMemoryClients(Config.Clients)
- .AddInMemoryApiScopes(Config.ApiScopes)
- .AddDeveloperSigningCredential();
-var app = builder.Build();
+namespace IdentityServer
+{
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            CreateHostBuilder(args).Build().Run();
+        }
 
-//app.MapGet("/", () => "Hello World!");
-
-app.UseHttpsRedirection();
-app.UseRouting();
-app.UseIdentityServer();
-app.Run();
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.UseStartup<Startup>();
+                });
+    }
+}

@@ -23,6 +23,42 @@
       ],
       "UpstreamPathTemplate": "/gateway/getemployee",
       "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Employee/getadmins",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 44385
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/getadmins",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Employee/AddEmployee",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 44385
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/addEmployee",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Leave/AddLeave",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 44379
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/addLeave",
+      "UpstreamHttpMethod": [ "POST" ]
     }
   ],
   "GlobalConfiguration": {

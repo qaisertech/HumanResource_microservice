@@ -1,14 +1,9 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Employee.Microservice.Models
+namespace Employee.Microservice.ViewModel
 {
-    [Table("Employee")]
-    public class EmployeeModel
+    public class EmployeeViewModel
     {
-        [Key]
-        public Guid EmployeeID { get; set; }
         public string Name { get; set; }
         public int Age { get; set; }
         public DateTime DOB { get; set; }

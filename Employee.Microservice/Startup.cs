@@ -51,6 +51,11 @@ namespace Employee.Microservice
             {
                 app.UseDeveloperExceptionPage();
             }
+           
+            app.UseCors(x =>
+            {
+                x.AllowAnyOrigin().AllowAnyHeader().AllowAnyHeader();
+            });
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseAuthentication();

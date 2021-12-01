@@ -3,6 +3,7 @@ using Employee.Microservice.IRepository;
 using Employee.Microservice.Models;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Employee.Microservice.Repository
 {
@@ -14,10 +15,33 @@ namespace Employee.Microservice.Repository
         {
             _employeeContext = employeeContext;
         }
+
+        public async Task AddEmployee(EmployeeModel model)
+        {
+            _employeeContext.Add<EmployeeModel>(model);
+            await _employeeContext.SaveChangesAsync();
+        }
+
+        public IEnumerable<EmployeeModel> GetAdmins()
+        {
+            var result = _employeeContext.Employees.Where(o => o.ReportingTo != null || o.ReportingTo != System.Guid.Empty).ToList();
+            return result;
+        }
+
         public IEnumerable<EmployeeModel> GetEmployees()
         {
             var result = _employeeContext.Employees.ToList();
             return result;
+        }
+
+        public async Task UpdateEmployee(EmployeeModel model)
+        {
+            var employee = _employeeContext.Employees.FirstOrDefault(o=> o.EmployeeID == model.EmployeeID);
+            if (employee != null)
+            {
+                employee = model;
+            }
+            await _employeeContext.SaveChangesAsync();
         }
     }
 }

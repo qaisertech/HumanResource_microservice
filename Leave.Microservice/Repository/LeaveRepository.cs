@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using RabbitMQ.Client;
 using System;
 using RabbitMQ.Models;
+using System.Linq;
 
 namespace Leave.Microservice.Repository
 {
@@ -28,27 +29,28 @@ namespace Leave.Microservice.Repository
         }
         public IEnumerable<LeaveModel> GetLeaves { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
 
-        public async Task AddLeave(LeaveModel leave)
+        public void AddLeave(LeaveModel leave)
         {
             try
             {
-                //await _leaveContext.AddAsync<LeaveModel>(leave);
-                //await _leaveContext.SaveChangesAsync();
+                _leaveContext.Add<LeaveModel>(leave);
+                _leaveContext.SaveChanges();
                 PublishToPayroll(leave);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                
+
             }
         }
 
-        private async void PublishToPayroll(LeaveModel model)
+        private async Task PublishToPayroll(LeaveModel model)
         {
             var leaveConsumerModel = new LeaveConsumerModel()
             {
                 EmployeeID = model.EmployeeID,
                 LeaveName = model.LeaveName,
-                NumberOfDays = model.NumberOfDays
+                NumberOfDays = model.NumberOfDays,
+                LeaveID = model.LeaveID
             };
             //var channel = RabbitMQConnection.ConnectToRabbitMQ(_configuration.LeaveQueue, "leave.init");
 
@@ -61,5 +63,21 @@ namespace Leave.Microservice.Repository
             await _publishEndpoint.Publish(leaveConsumerModel);
             //await endpoint.Send(leaveModel);
         }
+
+        public void UpdateLeave(PayrollLedgerModel model)
+        {
+            var leave = _leaveContext.Leaves.FirstOrDefault(o => o.LeaveID == model.LeaveID);
+            if (leave != null)
+            {
+                leave.Status = model.Status;
+                _leaveContext.Update(leave);
+                _leaveContext.SaveChanges();
+            }
+        }
+
+    //    using var client = httpClientFactory.CreateClient("order");
+    //            var response = await client.GetAsync("/api/order");
+    //var data = await response.Content.ReadAsStringAsync();
+    //            return JsonConvert.DeserializeObject<OrderDetail[]>(data);
     }
 }

@@ -14,5 +14,6 @@ namespace RabbitMQ
         public const string UserName = "guest";
         public const string Password = "guest";
         public const string LeaveQueue = "Leave_Queue";
+        public const string PayrollQueue = "Payroll_Queue";
     }
 }
