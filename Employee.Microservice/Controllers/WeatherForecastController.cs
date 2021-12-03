@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace Employee.Microservice.Controllers
 {
-
+    [Authorize]
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class WeatherForecastController : ControllerBase
     {
         private static readonly string[] Summaries = new[]
@@ -25,6 +25,7 @@ namespace Employee.Microservice.Controllers
             _logger = logger;
         }
 
+        [Authorize]
         [HttpGet]
         public IEnumerable<WeatherForecast> Get()
         {

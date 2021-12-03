@@ -12,6 +12,7 @@ using RabbitMQ.Client;
 using System;
 using RabbitMQ.Models;
 using System.Linq;
+using Refit;
 
 namespace Leave.Microservice.Repository
 {
@@ -20,15 +21,34 @@ namespace Leave.Microservice.Repository
         private readonly IPublishEndpoint _publishEndpoint;
         private readonly LeaveContext _leaveContext;
         private readonly LeaveConfiguration _configuration;
+        private readonly IEmployeeRepository _employeeRepository;
 
-        public LeaveRepository(LeaveContext leaveContext, IOptions<LeaveConfiguration> configuration, IPublishEndpoint publishEndpoint)
+        public LeaveRepository(LeaveContext leaveContext, IOptions<LeaveConfiguration> configuration, IPublishEndpoint publishEndpoint, IEmployeeRepository employeeRepository)
         {
             _publishEndpoint = publishEndpoint;
             _leaveContext = leaveContext;
             _configuration = configuration.Value;
+            _employeeRepository = employeeRepository;
         }
-        public IEnumerable<LeaveModel> GetLeaves { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
 
+        public async Task<IEnumerable<LeaveModel>> GetAllLeaves()
+        {
+
+            var leaves = _leaveContext.Leaves.ToList();
+            //foreach (var leave in leaves)
+            //{
+            //    try
+            //    {
+            //        var res = await _employeeRepository.GetEmployeeById(leave.EmployeeID);
+            //    }
+            //    catch (Exception ex)
+            //    {
+
+            //    }
+
+            //}
+            return leaves;
+        }
         public void AddLeave(LeaveModel leave)
         {
             try

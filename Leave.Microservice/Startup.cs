@@ -18,6 +18,7 @@ using Leave.Microservice.IRepository;
 using Microsoft.EntityFrameworkCore;
 using Leave.Microservice.Data;
 using Leave.Microservice.Consumer;
+using Refit;
 
 namespace Leave.Microservice
 {
@@ -35,7 +36,13 @@ namespace Leave.Microservice
         {
             services.Configure<LeaveConfiguration>(Configuration.GetSection("LeaveConfiguration"));
             services.AddDbContext<LeaveContext>(options => options.UseSqlServer(Configuration.GetConnectionString("LeaveConnectionString")));
-
+            services.AddAuthentication("Bearer")
+               .AddJwtBearer("Bearer", opt =>
+               {
+                   opt.RequireHttpsMetadata = false;
+                   opt.Authority = "https://localhost:5005";
+                   opt.Audience = "employeeApi";
+               });
             services.AddMassTransit(x =>
             {
                 x.AddConsumer<PayrollConsumer>();
@@ -59,9 +66,11 @@ namespace Leave.Microservice
                 //     config.AutoDelete = false;
                 // }));
             });
+            services.AddCors();
             services.AddMassTransitHostedService();
             services.AddControllers();
-
+            services.AddRefitClient<IEmployeeRepository>()
+                .ConfigureHttpClient(c => c.BaseAddress = new Uri("https://localhost:5010/"));
             services.AddScoped<ILeaveRepository, LeaveRepository>();
         }
 
@@ -72,16 +81,22 @@ namespace Leave.Microservice
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            app.UseCors(x =>
+            {
+                x.AllowAnyOrigin().AllowAnyHeader().AllowAnyHeader();
+            });
             app.UseHttpsRedirection();
 
+            app.UseStaticFiles();
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }

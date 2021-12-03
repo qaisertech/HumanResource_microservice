@@ -9,6 +9,6 @@ namespace Employee.Microservice.ViewModel
         public DateTime DOB { get; set; }
         public string Address { get; set; }
         public string Role { get; set; }
-        public Guid? ReportingTo { get; set; }
+        public Guid? ReportingTo { get; set; }= Guid.Empty;
     }
 }

@@ -1,7 +1,10 @@
 ﻿using Employee.Microservice.IRepository;
 using Employee.Microservice.Models;
 using Employee.Microservice.ViewModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Employee.Microservice.Controllers
@@ -16,13 +19,23 @@ namespace Employee.Microservice.Controllers
             _employeeRepository = employeeRepository;
         }
 
+        [Authorize]
         [HttpGet]
         public ActionResult Get()
         {
             return Ok(_employeeRepository.GetEmployees());
         }
 
+        [Authorize]
+        [HttpGet]
+        [Route("getemployeebyid/{id}")]
+        public IActionResult GetEmployeeById(Guid id)
+        {
+            return Ok(_employeeRepository.GetEmployeeById(id));
+        }
+
         [HttpPost]
+        [Authorize]
         [Route("AddEmployee")]
         public async Task<ActionResult> Add([FromBody] EmployeeViewModel viewModel)
         {
@@ -44,6 +57,14 @@ namespace Employee.Microservice.Controllers
         public ActionResult GetAdmins()
         {
             return Ok(_employeeRepository.GetAdmins());
+        }
+
+        [HttpGet("Privacy")]
+        [Authorize(Roles = "Admin")]
+        public IActionResult Privacy()
+        {
+            var claims = User.Claims.Select(c => new { c.Type, c.Value }).ToList();
+            return Ok(claims);
         }
     }
 }

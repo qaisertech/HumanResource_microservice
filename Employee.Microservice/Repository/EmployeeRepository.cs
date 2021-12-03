@@ -1,6 +1,7 @@
 ﻿using Employee.Microservice.Data;
 using Employee.Microservice.IRepository;
 using Employee.Microservice.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,6 +17,10 @@ namespace Employee.Microservice.Repository
             _employeeContext = employeeContext;
         }
 
+        public EmployeeModel GetEmployeeById(Guid Id)
+        {
+            return _employeeContext.Employees.FirstOrDefault(o=> o.EmployeeID == Id);
+        }
         public async Task AddEmployee(EmployeeModel model)
         {
             _employeeContext.Add<EmployeeModel>(model);

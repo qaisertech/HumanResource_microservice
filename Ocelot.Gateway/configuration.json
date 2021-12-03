@@ -6,11 +6,15 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 44385
+          "Port": 5010
         }
       ],
       "UpstreamPathTemplate": "/gateway/WeatherForecast",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": [ "GET" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Ocelot_HRKey",
+        "AllowedScopes": []
+      }
     },
     {
       "DownstreamPathTemplate": "/api/Employee",
@@ -18,11 +22,15 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 44385
+          "Port": 5010
         }
       ],
       "UpstreamPathTemplate": "/gateway/getemployee",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": [ "GET" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Ocelot_HRKey",
+        "AllowedScopes": []
+      }
     },
     {
       "DownstreamPathTemplate": "/api/Employee/getadmins",
@@ -30,11 +38,31 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 44385
+          "Port": 5010
         }
       ],
       "UpstreamPathTemplate": "/gateway/getadmins",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": [ "GET" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Ocelot_HRKey",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/Employee/getemployeebyid/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5010
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/getemployeebyid/{id}",
+      "UpstreamHttpMethod": [ "GET" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Ocelot_HRKey",
+        "AllowedScopes": []
+      }
     },
     {
       "DownstreamPathTemplate": "/api/Employee/AddEmployee",
@@ -42,11 +70,31 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 44385
+          "Port": 5010
         }
       ],
       "UpstreamPathTemplate": "/gateway/addEmployee",
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamHttpMethod": [ "POST" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Ocelot_HRKey",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/Leave",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 44379
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/getleave",
+      "UpstreamHttpMethod": [ "GET" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Ocelot_HRKey",
+        "AllowedScopes": []
+      }
     },
     {
       "DownstreamPathTemplate": "/api/Leave/AddLeave",
@@ -58,7 +106,30 @@
         }
       ],
       "UpstreamPathTemplate": "/gateway/addLeave",
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamHttpMethod": [ "POST" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Ocelot_HRKey",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/employee/privacy",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5010
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/privacy",
+      "UpstreamHttpMethod": [ "GET" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Ocelot_HRKey",
+        "AllowedScopes": [ "openid", "profile", "employeeApi" ]
+      },
+      "AddHeadersToRequest": {
+        "claims_roles": "Claims[roles] > value > |"
+      }
     }
   ],
   "GlobalConfiguration": {

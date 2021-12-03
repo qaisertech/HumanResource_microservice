@@ -7,7 +7,7 @@ namespace Leave.Microservice.IRepository
 {
     public interface ILeaveRepository
     {
-        IEnumerable<LeaveModel> GetLeaves { get; set; }
+        Task<IEnumerable<LeaveModel>> GetAllLeaves();
         void AddLeave(LeaveModel leave);
         void UpdateLeave(PayrollLedgerModel model);
     }
